@@ -11,9 +11,7 @@ export const listarColaboradores = async (req: Request, res: Response) => {
     const colaboradores = await knex<Colaboradores>("colaboradores");
 
     if (colaboradores.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Não existem colaboradores cadastrados" });
+      return res.status(404).json({ message: "Não existem colaboradores cadastrados" });
     }
 
     return res.json(colaboradores);
@@ -24,15 +22,10 @@ export const listarColaboradores = async (req: Request, res: Response) => {
 export const listarColaboradoresPorID = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const colaboradores = await knex<Colaboradores>("colaboradores").where(
-      "id",
-      id
-    );
+    const colaboradores = await knex<Colaboradores>("colaboradores").where("id", id);
 
     if (colaboradores.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Não existem colaboradores cadastrados" });
+      return res.status(404).json({ message: "Não existe colaborador cadastrador com esse id" });
     }
 
     return res.json(colaboradores);
@@ -52,7 +45,7 @@ export const criarColaboradores = async (req: Request, res: Response) => {
       })
       .returning("*");
 
-    return res.json(colaborador);
+    return res.status(201).json(colaborador);
   } catch (error) {
     return res.status(500).json({ message: "Erro interno de Servidor" });
   }
@@ -63,15 +56,15 @@ export const editarColaboradores = async (req: Request, res: Response) => {
   const { nome } = req.body;
 
   try {
-    const colaborador = await knex<Colaboradores>("colaboradores")
+    await knex<Omit<Colaboradores, "id">>("colaboradores").update({ nome }).where("id", id);
+
+    const colaboradorAtualizado = await knex<Colaboradores>("colaboradores")
       .where({
         id: Number(id),
       })
       .first();
 
-    await knex<Omit<Colaboradores, "id">>("colaboradores").update({ nome });
-
-    return res.json(colaborador);
+    return res.json(colaboradorAtualizado);
   } catch (error) {
     return res.status(500).json({ message: "Erro interno de Servidor" });
   }
@@ -80,9 +73,7 @@ export const deletarColaboradores = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const colaborador = await knex<Colaboradores>("colaboradores")
-      .where("id", id)
-      .del();
+    const colaborador = await knex<Colaboradores>("colaboradores").where("id", id).del();
 
     if (!colaborador) {
       return res.status(404).json({ message: "Usuario não existe" });

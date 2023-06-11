@@ -1,22 +1,17 @@
 import { Router } from "express";
-import {
-  criarEscalas,
-  deletarEscalas,
-  editarEscalas,
-  listarEscalasPorID,
-} from "../controladores/escalasController";
+import { criarEscalas, deletarEscalas, editarEscalas, listarEscalas, listarEscalasPorIDDoUsuario } from "../controladores/escalasController";
 
 const escalaRotas = Router();
 
-// Listar todas as escalas
-escalaRotas.get("/");
 // Criar escala para um usuário
-escalaRotas.post("/:id", criarEscalas);
-// Listar escalas de um usuário
-escalaRotas.get("/:id", listarEscalasPorID);
+escalaRotas.post("/criar/", criarEscalas);
 // Editar escala de um usuário
-escalaRotas.put("/:", editarEscalas);
+escalaRotas.put("/edit/:id", editarEscalas);
 // Excluir a escala de um usuário
-escalaRotas.delete("/:id", deletarEscalas);
+escalaRotas.delete("/delete/:id", deletarEscalas);
+// Listar escalas de um usuário
+escalaRotas.get("/:id", listarEscalasPorIDDoUsuario);
+// Listar todas as escalas
+escalaRotas.get("/", listarEscalas);
 
 export default escalaRotas;
