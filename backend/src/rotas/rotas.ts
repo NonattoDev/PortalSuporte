@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import escalaRotas from "./escalasRotas";
 import colaboradoresRotas from "./colaboradoresRotas";
 import { rotaDesconhecida } from "../middlewares/404middleware";

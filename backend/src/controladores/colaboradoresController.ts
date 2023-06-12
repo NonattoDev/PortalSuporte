@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { knex } from "../bancodedados/conexao";
 
-type Colaboradores = {
+export type Colaboradores = {
   id: number;
   nome: string;
 };
@@ -21,10 +21,11 @@ export const listarColaboradores = async (req: Request, res: Response) => {
 };
 export const listarColaboradoresPorID = async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
-    const colaboradores = await knex<Colaboradores>("colaboradores").where("id", id);
 
-    if (colaboradores.length === 0) {
+  try {
+    const colaboradores = await knex<Colaboradores>("colaboradores").where("id", id).first();
+
+    if (!colaboradores) {
       return res.status(404).json({ message: "Não existe colaborador cadastrador com esse id" });
     }
 
@@ -35,9 +36,8 @@ export const listarColaboradoresPorID = async (req: Request, res: Response) => {
 };
 export const criarColaboradores = async (req: Request, res: Response) => {
   const { nome } = req.body;
-  if (!nome) {
-    return res.status(400).json({ message: "Informe os dados" });
-  }
+  console.log(nome);
+
   try {
     const colaborador = await knex<Omit<Colaboradores, "id">>("colaboradores")
       .insert({
@@ -52,9 +52,7 @@ export const criarColaboradores = async (req: Request, res: Response) => {
 };
 export const editarColaboradores = async (req: Request, res: Response) => {
   const { id } = req.params;
-
   const { nome } = req.body;
-
   try {
     await knex<Omit<Colaboradores, "id">>("colaboradores").update({ nome }).where("id", id);
 
@@ -73,14 +71,16 @@ export const deletarColaboradores = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const colaborador = await knex<Colaboradores>("colaboradores").where("id", id).del();
-
-    if (!colaborador) {
-      return res.status(404).json({ message: "Usuario não existe" });
-    }
+    await knex<Colaboradores>("colaboradores").where("id", id).del();
 
     return res.json({ message: "Colaborador deletado" });
   } catch (error) {
-    return res.status(500).json({ message: "Erro interno de Servidor" });
+    if (error instanceof Error) {
+      if (error.message.includes("violates foreign key constraint")) {
+        return res.status(400).json({ message: "Não é possível excluir o colaborador, pois ele está cadastrado em uma escala!" });
+      } else {
+        return res.status(500).json({ message: "Erro interno de Servidor" + error.message });
+      }
+    }
   }
 };
