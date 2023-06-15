@@ -18,8 +18,8 @@ exports.listarColaboradores = listarColaboradores;
 const listarColaboradoresPorID = async (req, res) => {
     const { id } = req.params;
     try {
-        const colaboradores = await (0, conexao_1.knex)("colaboradores").where("id", id);
-        if (colaboradores.length === 0) {
+        const colaboradores = await (0, conexao_1.knex)("colaboradores").where("id", id).first();
+        if (!colaboradores) {
             return res.status(404).json({ message: "Não existe colaborador cadastrador com esse id" });
         }
         return res.json(colaboradores);
@@ -31,9 +31,7 @@ const listarColaboradoresPorID = async (req, res) => {
 exports.listarColaboradoresPorID = listarColaboradoresPorID;
 const criarColaboradores = async (req, res) => {
     const { nome } = req.body;
-    if (!nome) {
-        return res.status(400).json({ message: "Informe os dados" });
-    }
+    console.log(nome);
     try {
         const colaborador = await (0, conexao_1.knex)("colaboradores")
             .insert({
@@ -67,14 +65,18 @@ exports.editarColaboradores = editarColaboradores;
 const deletarColaboradores = async (req, res) => {
     const { id } = req.params;
     try {
-        const colaborador = await (0, conexao_1.knex)("colaboradores").where("id", id).del();
-        if (!colaborador) {
-            return res.status(404).json({ message: "Usuario não existe" });
-        }
+        await (0, conexao_1.knex)("colaboradores").where("id", id).del();
         return res.json({ message: "Colaborador deletado" });
     }
     catch (error) {
-        return res.status(500).json({ message: "Erro interno de Servidor" });
+        if (error instanceof Error) {
+            if (error.message.includes("violates foreign key constraint")) {
+                return res.status(400).json({ message: "Não é possível excluir o colaborador, pois ele está cadastrado em uma escala!" });
+            }
+            else {
+                return res.status(500).json({ message: "Erro interno de Servidor" + error.message });
+            }
+        }
     }
 };
 exports.deletarColaboradores = deletarColaboradores;

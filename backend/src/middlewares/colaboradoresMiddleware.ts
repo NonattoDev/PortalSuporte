@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, request } from "express";
+import { NextFunction, Request, Response } from "express";
 import { knex } from "../bancodedados/conexao";
 import { Colaboradores } from "../controladores/colaboradoresController";
 

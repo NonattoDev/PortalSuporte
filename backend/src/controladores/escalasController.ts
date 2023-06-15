@@ -16,11 +16,7 @@ export const listarEscalas = async (req: Request, res: Response) => {
   try {
     const escalas = await knex<Escalas>("escalas")
       .join("colaboradores", "escalas.colaborador_id", "colaboradores.id")
-      .select("escalas.id", "escalas.data", "escalas.hora_inicio", "escalas.hora_fim", "escalas.colaborador_id", "colaboradores.nome as colaborador_nome");
-
-    if (escalas.length === 0) {
-      return res.status(404).json({ message: "Não existem escalas cadastradas!" });
-    }
+      .select("escalas.id", "escalas.data", "escalas.hora_inicio", "escalas.hora_fim", "escalas.colaborador_id", "escalas.dia", "colaboradores.nome as colaborador_nome");
 
     return res.json(escalas);
   } catch {
@@ -57,6 +53,7 @@ export const criarEscalas = async (req: Request, res: Response) => {
 
   let escala = {
     data: format(new Date(data), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }),
+    dia: format(new Date(data), "eeee", { locale: ptBR }).charAt(0).toUpperCase() + format(new Date(data), "eeee", { locale: ptBR }).slice(1),
     hora_inicio,
     hora_fim,
     colaborador_id: colaborador.id,
