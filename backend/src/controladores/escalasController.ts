@@ -59,6 +59,8 @@ export const criarEscalas = async (req: Request, res: Response) => {
     colaborador_id: colaborador.id,
   };
 
+  console.log(escala);
+
   knex<Omit<Escalas, "id">>("escalas")
     .insert(escala)
     .then(() => {

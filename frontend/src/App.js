@@ -3,6 +3,8 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
+  const urlBase = "http://localhost:3000/";
+
   const [data, setData] = useState("");
   const [hora_inicio, setHora_inicio] = useState("");
   const [hora_fim, setHora_fim] = useState("");
@@ -11,23 +13,34 @@ function App() {
   const [colaboradores, setColaboradores] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const initialData = async () => {
       try {
-        const colaboradoresResponse = await axios.get("http://localhost:3000/colaborador");
+        const colaboradoresResponse = await axios.get(urlBase + "colaborador");
         setColaboradores(colaboradoresResponse.data);
-        const escalasResponse = await axios.get("http://localhost:3000/escala");
+        const escalasResponse = await axios.get(urlBase + "escala");
         setEscalas(escalasResponse.data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchData();
+    initialData();
   }, []);
+
+
+  const fetchData = async () => {
+    try {
+      const escalasResponse = await axios.get(urlBase + "escala");
+      console.log(escalasResponse.data)
+      setEscalas(escalasResponse.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const adicionarEscala = async () => {
     try {
-      await axios.post("http://localhost:3000/escala/criar", {
+      await axios.post(urlBase + "escala/criar", {
         hora_inicio,
         data,
         hora_fim,
@@ -38,20 +51,13 @@ function App() {
       setData("");
       setColaborador_nome("");
 
-      fetchData(); // Atualiza a lista de escalas após a inserção bem-sucedida
+      await fetchData(); // Atualiza a lista de escalas após a inserção bem-sucedida
     } catch (error) {
       console.error(error.response.data.message);
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const escalasResponse = await axios.get("http://localhost:3000/escala");
-      setEscalas(escalasResponse.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
 
   return (
     <div className="App">
@@ -91,7 +97,6 @@ function App() {
           <tr>
             <th>ID Colaborador</th>
             <th>Data</th>
-            <th>Dia da Semana</th>
             <th>Nome Colaborador</th>
             <th>Hora Início</th>
             <th>Hora Fim</th>
@@ -100,9 +105,8 @@ function App() {
         <tbody>
           {escalas.map((escala) => (
             <tr key={escala.id}>
-              <td>{escala.id}</td>
+              <td>{escala.colaborador_id}</td>
               <td>{escala.data}</td>
-              <td>{escala.dia}</td>
               <td>{escala.colaborador_nome}</td>
               <td>{escala.hora_inicio}</td>
               <td>{escala.hora_fim}</td>
