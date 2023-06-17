@@ -61,7 +61,7 @@ export const criarEscalas = async (req: Request, res: Response) => {
 
   console.log(escala);
 
-  knex<Omit<Escalas, "id">>("escalas")
+  await knex<Omit<Escalas, "id">>("escalas")
     .insert(escala)
     .then(() => {
       console.log("Escala inserida com sucesso!");

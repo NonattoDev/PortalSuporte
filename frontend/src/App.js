@@ -27,11 +27,10 @@ function App() {
     initialData();
   }, []);
 
-
   const fetchData = async () => {
     try {
       const escalasResponse = await axios.get(urlBase + "escala");
-      console.log(escalasResponse.data)
+      console.log(escalasResponse.data);
       setEscalas(escalasResponse.data);
     } catch (error) {
       console.error(error);
@@ -56,8 +55,6 @@ function App() {
       console.error(error.response.data.message);
     }
   };
-
-  
 
   return (
     <div className="App">
