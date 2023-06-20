@@ -54,3 +54,4 @@ const deletarColaboradoresMid = async (req, res, next) => {
     }
 };
 exports.deletarColaboradoresMid = deletarColaboradoresMid;
+//# sourceMappingURL=colaboradoresMiddleware.js.map

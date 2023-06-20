@@ -12,3 +12,4 @@ rotas.use("/escala", escalasRotas_1.default);
 rotas.use("/colaborador", colaboradoresRotas_1.default);
 rotas.use("/", _404middleware_1.rotaDesconhecida);
 exports.default = rotas;
+//# sourceMappingURL=rotas.js.map

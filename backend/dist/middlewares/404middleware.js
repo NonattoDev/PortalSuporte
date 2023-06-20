@@ -5,3 +5,4 @@ const rotaDesconhecida = (req, res, next) => {
     return res.json({ message: "Ops, está perdido ? , Página não encontrada!" });
 };
 exports.rotaDesconhecida = rotaDesconhecida;
+//# sourceMappingURL=404middleware.js.map

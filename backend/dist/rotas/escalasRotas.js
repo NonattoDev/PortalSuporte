@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const escalasController_1 = require("../controladores/escalasController");
+const escalasMiddleware_1 = require("../middlewares/escalasMiddleware");
 const escalaRotas = (0, express_1.Router)();
 // Criar escala para um usuário
-escalaRotas.post("/criar/", escalasController_1.criarEscalas);
+escalaRotas.post("/criar/", escalasMiddleware_1.criarEscalaMid, escalasController_1.criarEscalas);
 // Editar escala de um usuário
 escalaRotas.put("/edit/:id", escalasController_1.editarEscalas);
 // Excluir a escala de um usuário
@@ -14,3 +15,4 @@ escalaRotas.get("/:id", escalasController_1.listarEscalasPorIDDoUsuario);
 // Listar todas as escalas
 escalaRotas.get("/", escalasController_1.listarEscalas);
 exports.default = escalaRotas;
+//# sourceMappingURL=escalasRotas.js.map

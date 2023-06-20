@@ -8,13 +8,10 @@ const listarEscalas = async (req, res) => {
     try {
         const escalas = await (0, conexao_1.knex)("escalas")
             .join("colaboradores", "escalas.colaborador_id", "colaboradores.id")
-            .select("escalas.id", "escalas.data", "escalas.hora_inicio", "escalas.hora_fim", "escalas.colaborador_id", "colaboradores.nome as colaborador_nome");
-        if (escalas.length === 0) {
-            return res.status(404).json({ message: "Não existem escalas cadastradas!" });
-        }
+            .select("escalas.id", "escalas.data", "escalas.hora_inicio", "escalas.hora_fim", "escalas.colaborador_id", "escalas.dia", "colaboradores.nome as colaborador_nome");
         return res.json(escalas);
     }
-    catch (_a) {
+    catch {
         res.status(500).json({ message: "Erro interno de servidor" });
     }
 };
@@ -31,7 +28,7 @@ const listarEscalasPorIDDoUsuario = async (req, res) => {
         }
         return res.json(escalas);
     }
-    catch (_a) {
+    catch {
         res.status(500).json({ message: "Erro interno de Servidor" });
     }
 };
@@ -44,11 +41,13 @@ const criarEscalas = async (req, res) => {
     }
     let escala = {
         data: (0, date_fns_1.format)(new Date(data), "dd 'de' MMMM 'de' yyyy", { locale: locale_1.ptBR }),
+        dia: (0, date_fns_1.format)(new Date(data), "eeee", { locale: locale_1.ptBR }).charAt(0).toUpperCase() + (0, date_fns_1.format)(new Date(data), "eeee", { locale: locale_1.ptBR }).slice(1),
         hora_inicio,
         hora_fim,
         colaborador_id: colaborador.id,
     };
-    (0, conexao_1.knex)("escalas")
+    console.log(escala);
+    await (0, conexao_1.knex)("escalas")
         .insert(escala)
         .then(() => {
         console.log("Escala inserida com sucesso!");
@@ -100,3 +99,4 @@ const deletarEscalas = async (req, res) => {
     }
 };
 exports.deletarEscalas = deletarEscalas;
+//# sourceMappingURL=escalasController.js.map

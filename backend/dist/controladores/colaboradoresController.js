@@ -80,3 +80,4 @@ const deletarColaboradores = async (req, res) => {
     }
 };
 exports.deletarColaboradores = deletarColaboradores;
+//# sourceMappingURL=colaboradoresController.js.map

@@ -18,3 +18,4 @@ colaboradoresRotas.put("/editar/:id", colaboradoresMiddleware_1.editarColaborado
 // Excluir um usuário
 colaboradoresRotas.delete("/excluir/:id", colaboradoresMiddleware_1.deletarColaboradoresMid, colaboradoresController_1.deletarColaboradores);
 exports.default = colaboradoresRotas;
+//# sourceMappingURL=colaboradoresRotas.js.map
