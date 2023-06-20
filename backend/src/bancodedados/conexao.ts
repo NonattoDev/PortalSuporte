@@ -21,6 +21,7 @@ async function createEscalasTable() {
     return knex.schema.createTable("escalas", (table) => {
       table.increments("id").primary();
       table.string("data");
+      table.string("dia");
       table.string("hora_inicio");
       table.string("hora_fim");
       table.integer("colaborador_id").references("id").inTable("colaboradores");
